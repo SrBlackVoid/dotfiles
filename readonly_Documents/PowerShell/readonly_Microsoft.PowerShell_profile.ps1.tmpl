@@ -1,0 +1,60 @@
+{{ $host := .chezmoi.hostname }}
+{{- $hostCfg := index .powershell.byHost $host -}}
+{{- $featureCfg := .powershell.byFeature -}}
+
+
+$Host.PrivateData.VerboseForegroundColor = "Cyan"
+$PSStyle.Formatting.Debug = $PSStyle.Foreground.BrightCyan
+$PSStyle.Formatting.Verbose = $PSStyle.Foreground.BrightMagenta
+
+#EnvVar Setups
+$env:nvimConfig = "~/AppData/Local/nvim"
+$env:CodeRepo = {{ $hostCfg.start_dir | toJson }}
+{{ if has $host $featureCfg.enable_exercism -}}
+$env:Exercism = "~/Exercism"
+{{- end }}
+{{ if has $host $featureCfg.enable_psmux -}}
+$env:PSMuxConfig = "~/.config/psmux"
+{{- end }}
+
+#Establish terminal icons
+Import-Module -Name Terminal-Icons
+
+#Set up oh-my-posh terminal line
+#oh-my-posh --init --shell pwsh --config ~/AppData/Local/Programs/oh-my-posh/themes/jandedobbeleer.omp.json | Invoke-Expression
+oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json | Invoke-Expression
+
+#Set up PSReadLine and then PSFzf
+Import-Module PSReadLine
+Import-Module PSFzf
+
+Set-Alias grep Invoke-PsFzfRipgrep
+Set-Alias BuildMe Invoke-Build
+
+{{ if has $host $featureCfg.enable_zoxide -}}
+Invoke-Expression (& { (zoxide init powershell | Out-String)})
+{{- end }}
+
+function CheckMe {
+	param(
+		[string]$Path,
+		[switch]$Fix
+	)
+
+	Invoke-ScriptAnalyzer -Path $Path -Fix:$Fix
+}
+
+function boop {
+	Import-Module ./DevWork.psm1 -Force
+}
+
+function ClearNvimShada {
+	Get-ChildItem -Path "~/AppData/Local/nvim-data/shada" -Filter "*.tmp.*"  | Remove-Item -Force
+}
+
+{{ if has $host $featureCfg.enable_psmux -}}
+# Shortcut psmux launch for now
+function psmux {
+	. "C:/Program Files/psmux/target/release/psmux.exe"
+}
+{{ end -}}
