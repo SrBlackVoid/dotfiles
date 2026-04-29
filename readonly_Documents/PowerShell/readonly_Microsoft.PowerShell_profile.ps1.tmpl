@@ -19,23 +19,23 @@ $env:PSMuxConfig = "~/.config/psmux"
 {{- end }}
 #endregion EnvVarSetups
 
-#Establish terminal icons
-Import-Module -Name Terminal-Icons
+#region AsyncModuleLoads
+# Benchmarks have shown these to take the longest. Deferring loading to initialization of shell.
+Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
+    Import-Module -Name Terminal-Icons
 
-#Set up oh-my-posh terminal line
-#oh-my-posh --init --shell pwsh --config ~/AppData/Local/Programs/oh-my-posh/themes/jandedobbeleer.omp.json | Invoke-Expression
-oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json | Invoke-Expression
+    Import-Module PSFzf
+    Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
+} | Out-Null
+#endregion AsyncModuleLoads
 
-#Set up PSReadLine and then PSFzf
+& ([scriptBlock]::Create((oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json )))
+
+#Initialize PSReadLine and zoxide (if installed)
 Import-Module PSReadLine
-Import-Module PSFzf
-
-#Setting PsFzf to handle cmd history lookup
-Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
-
 
 {{ if has $host $featureCfg.enable_zoxide -}}
-Invoke-Expression (& { (zoxide init powershell | Out-String)})
+& ([scriptblock]::Create((zoxide init powershell)))
 {{- end }}
 
 #region HelperFunctions
