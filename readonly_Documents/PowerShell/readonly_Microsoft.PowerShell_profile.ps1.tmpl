@@ -28,6 +28,9 @@ oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json | Invoke-Expressio
 Import-Module PSReadLine
 Import-Module PSFzf
 
+#Setting PsFzf to handle cmd history lookup
+Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
+
 Set-Alias grep Invoke-PsFzfRipgrep
 Set-Alias BuildMe Invoke-Build
 
