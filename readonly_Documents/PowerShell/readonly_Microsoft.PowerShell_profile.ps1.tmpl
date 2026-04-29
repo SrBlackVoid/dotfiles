@@ -55,13 +55,6 @@ function boop {
 function ClearNvimShada {
 	Get-ChildItem -Path "~/AppData/Local/nvim-data/shada" -Filter "*.tmp.*"  | Remove-Item -Force
 }
-
-{{ if has $host $featureCfg.enable_psmux -}}
-# Shortcut psmux launch for now
-function psmux {
-	. "C:/Program Files/psmux/target/release/psmux.exe"
-}
-{{ end -}}
 #endregion HelperFunctions
 
 #region Aliases
