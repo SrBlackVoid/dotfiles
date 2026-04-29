@@ -2,12 +2,13 @@
 {{- $hostCfg := index .powershell.byHost $host -}}
 {{- $featureCfg := .powershell.byFeature -}}
 
-
+#region PSStyle
 $Host.PrivateData.VerboseForegroundColor = "Cyan"
 $PSStyle.Formatting.Debug = $PSStyle.Foreground.BrightCyan
 $PSStyle.Formatting.Verbose = $PSStyle.Foreground.BrightMagenta
+#endregion PSStyle
 
-#EnvVar Setups
+#region EnvVarSetups
 $env:nvimConfig = "~/AppData/Local/nvim"
 $env:CodeRepo = {{ $hostCfg.start_dir | toJson }}
 {{ if has $host $featureCfg.enable_exercism -}}
@@ -16,6 +17,7 @@ $env:Exercism = "~/Exercism"
 {{ if has $host $featureCfg.enable_psmux -}}
 $env:PSMuxConfig = "~/.config/psmux"
 {{- end }}
+#endregion EnvVarSetups
 
 #Establish terminal icons
 Import-Module -Name Terminal-Icons
@@ -31,13 +33,12 @@ Import-Module PSFzf
 #Setting PsFzf to handle cmd history lookup
 Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
 
-Set-Alias grep Invoke-PsFzfRipgrep
-Set-Alias BuildMe Invoke-Build
 
 {{ if has $host $featureCfg.enable_zoxide -}}
 Invoke-Expression (& { (zoxide init powershell | Out-String)})
 {{- end }}
 
+#region HelperFunctions
 function CheckMe {
 	param(
 		[string]$Path,
@@ -61,3 +62,9 @@ function psmux {
 	. "C:/Program Files/psmux/target/release/psmux.exe"
 }
 {{ end -}}
+#endregion HelperFunctions
+
+#region Aliases
+Set-Alias grep Invoke-PsFzfRipgrep
+Set-Alias BuildMe Invoke-Build
+#endregion Aliases
