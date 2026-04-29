@@ -1,5 +1,5 @@
 {{ $host := .chezmoi.hostname }}
-{{- $hostCfg := index .powershell.byHost $host -}}
+{{- $rootDevPath := index .general.rootDevPath $host -}}
 {{- $featureCfg := .powershell.byFeature -}}
 
 #region PSStyle
@@ -10,7 +10,7 @@ $PSStyle.Formatting.Verbose = $PSStyle.Foreground.BrightMagenta
 
 #region EnvVarSetups
 $env:nvimConfig = "~/AppData/Local/nvim"
-$env:CodeRepo = {{ $hostCfg.start_dir | toJson }}
+$env:CodeRepo = {{ $rootDevPath | toJson }}
 {{ if has $host $featureCfg.enable_exercism -}}
 $env:Exercism = "~/Exercism"
 {{- end }}

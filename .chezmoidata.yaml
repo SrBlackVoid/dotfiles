@@ -1,23 +1,9 @@
-nvim:
-  byHost:
-    Gideon:
-      project_exclude:
-        - 'e:/Code Repos'
-        - 'c:/Users/srayb'
-      root_search_dirs: 'e:/Code Repos'
-
-    PinkBabyMonster:
-      project_exclude:
-        - 'c:/CodeRepos'
-        - 'c:/Users/srayb'
-      root_search_dirs: 'c:/CodeRepos'
+general:
+  rootDevPath:
+    Gideon: 'E:/Code Repos'
+    PinkBabyMonster: 'C:/CodeRepos'
 
 powershell:
-  byHost:
-    Gideon:
-      start_dir: 'E:/Code Repos'
-    PinkBabyMonster:
-      start_dir: 'C:/CodeRepos'
   byFeature:
     enable_exercism:
       - Gideon

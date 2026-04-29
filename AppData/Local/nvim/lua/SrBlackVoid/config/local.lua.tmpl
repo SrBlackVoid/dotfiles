@@ -1,13 +1,12 @@
-{{- $cfg := index .nvim.byHost .chezmoi.hostname -}}
+{{- $rootDevPath := index .general.rootDevPath .chezmoi.hostname -}}
 
 return {
 	-- Set paths you want to exclude from project.nvim
 	project_exclude = {
-		{{- range $cfg.project_exclude }}
-		{{ . | toJson }},
-		{{- end }}
+		{{ $rootDevPath | toJson }},
+		{{ .chezmoi.homeDir | toJson }},
 	},
 
 	-- Set paths you want to include in Telescope broad 'Search Files', e.g. root workspace dir
-	root_search_dirs = {{ $cfg.root_search_dirs | toJson }},
+	root_search_dirs = {{ $rootDevPath | toJson }},
 }
