@@ -1,7 +1,7 @@
 local paths = require("SrBlackVoid.config.local")
 
 return {{
-	"ahmedkhalf/project.nvim",
+	"DrKJeff16/project.nvim",
 	lazy = false,
 	keys = {
 		{ "<leader>gp", ":Telescope projects<CR>", desc = "[G]oto [P]rojects" }
@@ -17,7 +17,7 @@ return {{
 		exclude_dirs = paths.project_exclude
 	},
 	config = function(_, opts)
-		require("project_nvim").setup(opts)
+		require("project").setup(opts)
 		require("telescope").load_extension("projects")
 	end,
 }}
