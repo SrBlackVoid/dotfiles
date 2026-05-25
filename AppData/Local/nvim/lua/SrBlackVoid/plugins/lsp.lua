@@ -8,6 +8,10 @@ return {{
 		"saghen/blink.cmp",
 	},
 
+	keys = {
+		{ "<leader>L", ":LspRestart<CR>", desc = "[L]SP Restart" }
+	},
+
 	opts = {
 		servers = require("SrBlackVoid.lsp.servers"),
 	},
