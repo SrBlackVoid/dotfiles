@@ -72,6 +72,9 @@ function M.setup(opts)
 	opts = opts or {}
 	local servers = opts.servers or {}
 
+	-- Set .ps1xml files to use xml filetype for lemminx LSP
+	vim.filetype.add({ extension = { ps1xml = "xml" } })
+
 	local capabilities = make_capabilities()
 
 	require("mason").setup()
