@@ -49,6 +49,9 @@ vim.opt.scrolloff = 10
 -- Set highlight on search
 vim.opt.hlsearch = true
 
+-- Concealing hidden text chars
+vim.opt.conceallevel = 2
+
 -- Show inline diagnostics
 vim.diagnostic.config({
 	virtual_text = true,

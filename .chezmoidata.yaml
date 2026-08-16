@@ -2,6 +2,10 @@ general:
   rootDevPath:
     Gideon: 'E:/Code Repos'
     PinkBabyMonster: 'C:/CodeRepos'
+  obsidianVault:
+    Gideon:
+      name: 'Desktop Vault'
+      path: 'E:/Obsidian/Desktop Vault'
 
 powershell:
   byFeature:
