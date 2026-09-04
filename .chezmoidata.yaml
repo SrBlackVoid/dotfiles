@@ -6,6 +6,9 @@ general:
     Gideon:
       name: 'Desktop Vault'
       path: 'E:/Obsidian/Desktop Vault'
+    PinkBabyMonster:
+      name: 'Central HQ'
+      path: '~/Documents/Central HQ'
 
 powershell:
   byFeature:
