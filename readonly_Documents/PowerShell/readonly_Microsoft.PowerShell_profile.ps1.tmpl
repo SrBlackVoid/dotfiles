@@ -1,11 +1,15 @@
-{{ $host := .chezmoi.hostname }}
+{{- $host := .chezmoi.hostname -}}
 {{- $rootDevPath := index .general.rootDevPath $host -}}
+
 {{- $hasZoxide := lookPath "zoxide" -}}
+{{- $hasOhMyPosh := lookPath "oh-my-posh" -}}
 {{- $hasExercism := lookPath "exercism" -}}
 {{- $hasPSMux := lookPath "psmux" -}}
-{{- $hasTerminalIcons := output "pwsh" "-NoProfile" "-Command" "Get-Module -ListAvailable -Name Terminal-Icons" | trim -}}
-{{- $hasPSFzf := output "pwsh" "-NoProfile" "-Command" "Get-Module -ListAvailable -Name PSFzf" | trim -}}
-{{- $hasInvokeBuild := output "pwsh" "-NoProfile" "-Command" "Get-Module -ListAvailable -Name InvokeBuild" | trim -}}
+
+{{- $moduleNames := list "Terminal-Icons" "PSFzf" "InvokeBuild" -}}
+{{- $moduleJson := $moduleNames | toJson -}}
+{{- $moduleQuery := printf "$names = '%s' | ConvertFrom-Json; [array]$installed = (Get-Module -ListAvailable -Name $names).Name | Select-Object -Unique; ConvertTo-Json -InputObject $installed -Compress" $moduleJson -}}
+{{- $installedModules := output "pwsh" "-NoProfile" "-Command" $moduleQuery | fromJson -}}
 
 #region PSStyle
 $Host.PrivateData.VerboseForegroundColor = "Cyan"
@@ -15,22 +19,25 @@ $PSStyle.Formatting.Verbose = $PSStyle.Foreground.BrightMagenta
 
 #region AsyncModuleLoads
 # Benchmarks have shown these to take the longest. Deferring loading to initialization of shell.
-{{- if or $hasTerminalIcons $hasPSFzf }}
+{{- if or (has "Terminal-Icons" $installedModules) (has "PSFzf" $installedModules) }}
 Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
-    {{- if $hasTerminalIcons }}
-    Import-Module -Name Terminal-Icons
-    {{- end }}
-    {{- if $hasPSFzf }}
-    Import-Module PSFzf
-    Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
-    {{- end }}
+	{{- if has "Terminal-Icons" $installedModules }}
+	Import-Module -Name Terminal-Icons
+	{{- end }}
+
+	{{- if has "PSFzf" $installedModules }}
+	Import-Module PSFzf
+	Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
+	{{- end }}
 } | Out-Null
 {{- end }}
 #endregion AsyncModuleLoads
 
+{{ if $hasOhMyPosh -}}
 & ([scriptBlock]::Create((oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json )))
+{{- end }}
 
-#Initialize PSReadLine and zoxide (if installed)
+# Initialize PSReadLine and zoxide (if installed)
 Import-Module PSReadLine
 
 {{ if $hasZoxide -}}
@@ -40,13 +47,16 @@ Import-Module PSReadLine
 #region EnvVarSetups
 $env:nvimConfig = "~/AppData/Local/nvim"
 $env:CodeRepo = {{ $rootDevPath | toJson }}
+
 {{ if $hasExercism -}}
 $env:Exercism = "~/Exercism"
 {{- end }}
+
 {{ if $hasPSMux -}}
 $env:PSMuxConfig = "~/.config/psmux"
 {{- end }}
-{{- if $hasPSFzf }}
+
+{{- if has "PSFzf" $installedModules }}
 $env:EDITOR = "nvim" # Redirects grep to open Neovim instead of VS Code
 {{- end }}
 #endregion EnvVarSetups
@@ -57,7 +67,7 @@ function boop {
 }
 
 function ClearNvimShada {
-	Get-ChildItem -Path "~/AppData/Local/nvim-data/shada" -Filter "*.tmp.*"  | Remove-Item -Force
+	Get-ChildItem -Path "~/AppData/Local/nvim-data/shada" -Filter "*.tmp.*" | Remove-Item -Force
 }
 
 {{ if $hasPSMux -}}
@@ -74,10 +84,12 @@ function mux {
 
 #region Aliases
 Set-Alias CheckMe Invoke-ScriptAnalyzer
-{{- if $hasPSFzf }}
+
+{{- if has "PSFzf" $installedModules }}
 Set-Alias grep Invoke-PsFzfRipgrep
 {{- end }}
-{{- if $hasInvokeBuild }}
+
+{{- if has "InvokeBuild" $installedModules }}
 Set-Alias BuildMe Invoke-Build
 {{- end }}
 #endregion Aliases
