@@ -52,15 +52,6 @@ $env:EDITOR = "nvim" # Redirects grep to open Neovim instead of VS Code
 #endregion EnvVarSetups
 
 #region HelperFunctions
-function CheckMe {
-	param(
-		[string]$Path,
-		[switch]$Fix
-	)
-
-	Invoke-ScriptAnalyzer -Path $Path -Fix:$Fix
-}
-
 function boop {
 	Import-Module ./DevWork.psm1 -Force
 }
@@ -82,6 +73,7 @@ function mux {
 #endregion HelperFunctions
 
 #region Aliases
+Set-Alias CheckMe Invoke-ScriptAnalyzer
 {{- if $hasPSFzf }}
 Set-Alias grep Invoke-PsFzfRipgrep
 {{- end }}
