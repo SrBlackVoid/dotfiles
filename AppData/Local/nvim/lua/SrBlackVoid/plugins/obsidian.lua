@@ -21,11 +21,6 @@ return {{
 		picker = {
 			name = "telescope.nvim"
 		},
-		workspaces = {
-			{
-				name = paths.obsidian_vault.name,
-				path = paths.obsidian_vault.path,
-			}
-		},
+		workspaces = paths.obsidian_vaults,
 	},
 }}

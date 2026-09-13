@@ -3,3 +3,7 @@
 **/.git
 **/.git/**
 README.md
+{{- $obsidianJsonPath := printf "%s/Obsidian/obsidian.json" (env "APPDATA") }}
+{{- if not (stat $obsidianJsonPath) }}
+AppData/Local/nvim/lua/SrBlackVoid/plugins/obsidian.lua
+{{- end }}

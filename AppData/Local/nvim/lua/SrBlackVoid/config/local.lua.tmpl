@@ -1,5 +1,6 @@
 {{- $rootDevPath := index .general.rootDevPath .chezmoi.hostname -}}
-{{- $obsidianVault := index .general.obsidianVault .chezmoi.hostname -}}
+{{- $obsidianJsonPath := printf "%s/Obsidian/obsidian.json" (env "APPDATA") }}
+{{- $hasObsidian := stat $obsidianJsonPath -}}
 
 return {
 	-- Set paths you want to exclude from project.nvim
@@ -10,10 +11,15 @@ return {
 
 	-- Set paths you want to include in Telescope broad 'Search Files', e.g. root workspace dir
 	root_search_dirs = {{ $rootDevPath | toJson }},
-
+{{ if $hasObsidian }}
 	-- Obsidian vault configuration
-	obsidian_vault = {
-		name = {{ $obsidianVault.name | toJson }},
-		path = {{ $obsidianVault.path | toJson }},
+	obsidian_vaults = {
+	{{- range $id, $vault := (include $obsidianJsonPath | fromJson).vaults }}
+		{
+			name = {{ $vault.path | osBase | toJson }},
+			path = {{ $vault.path | toJson }},
+		},
+	{{- end }}
 	},
+{{- end }}
 }

@@ -1,6 +1,11 @@
 {{ $host := .chezmoi.hostname }}
 {{- $rootDevPath := index .general.rootDevPath $host -}}
-{{- $featureCfg := .powershell.byFeature -}}
+{{- $hasZoxide := lookPath "zoxide" -}}
+{{- $hasExercism := lookPath "exercism" -}}
+{{- $hasPSMux := lookPath "psmux" -}}
+{{- $hasTerminalIcons := output "pwsh" "-NoProfile" "-Command" "Get-Module -ListAvailable -Name Terminal-Icons" | trim -}}
+{{- $hasPSFzf := output "pwsh" "-NoProfile" "-Command" "Get-Module -ListAvailable -Name PSFzf" | trim -}}
+{{- $hasInvokeBuild := output "pwsh" "-NoProfile" "-Command" "Get-Module -ListAvailable -Name InvokeBuild" | trim -}}
 
 #region PSStyle
 $Host.PrivateData.VerboseForegroundColor = "Cyan"
@@ -10,12 +15,17 @@ $PSStyle.Formatting.Verbose = $PSStyle.Foreground.BrightMagenta
 
 #region AsyncModuleLoads
 # Benchmarks have shown these to take the longest. Deferring loading to initialization of shell.
+{{- if or $hasTerminalIcons $hasPSFzf }}
 Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Action {
+    {{- if $hasTerminalIcons }}
     Import-Module -Name Terminal-Icons
-
+    {{- end }}
+    {{- if $hasPSFzf }}
     Import-Module PSFzf
     Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
+    {{- end }}
 } | Out-Null
+{{- end }}
 #endregion AsyncModuleLoads
 
 & ([scriptBlock]::Create((oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json )))
@@ -23,20 +33,22 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Act
 #Initialize PSReadLine and zoxide (if installed)
 Import-Module PSReadLine
 
-{{ if has $host $featureCfg.enable_zoxide -}}
+{{ if $hasZoxide -}}
 & ([scriptblock]::Create((zoxide init powershell)))
 {{- end }}
 
 #region EnvVarSetups
 $env:nvimConfig = "~/AppData/Local/nvim"
 $env:CodeRepo = {{ $rootDevPath | toJson }}
-{{ if has $host $featureCfg.enable_exercism -}}
+{{ if $hasExercism -}}
 $env:Exercism = "~/Exercism"
 {{- end }}
-{{ if has $host $featureCfg.enable_psmux -}}
+{{ if $hasPSMux -}}
 $env:PSMuxConfig = "~/.config/psmux"
 {{- end }}
+{{- if $hasPSFzf }}
 $env:EDITOR = "nvim" # Redirects grep to open Neovim instead of VS Code
+{{- end }}
 #endregion EnvVarSetups
 
 #region HelperFunctions
@@ -57,7 +69,7 @@ function ClearNvimShada {
 	Get-ChildItem -Path "~/AppData/Local/nvim-data/shada" -Filter "*.tmp.*"  | Remove-Item -Force
 }
 
-{{ if has $host $featureCfg.enable_psmux -}}
+{{ if $hasPSMux -}}
 function mux {
 	[CmdletBinding()]
 	param(
@@ -70,6 +82,10 @@ function mux {
 #endregion HelperFunctions
 
 #region Aliases
+{{- if $hasPSFzf }}
 Set-Alias grep Invoke-PsFzfRipgrep
+{{- end }}
+{{- if $hasInvokeBuild }}
 Set-Alias BuildMe Invoke-Build
+{{- end }}
 #endregion Aliases
