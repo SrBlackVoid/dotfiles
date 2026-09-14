@@ -1,0 +1,4 @@
+{{- $rootDevPath := promptStringOnce . "rootDevPath" "Root development folder" -}}
+
+[data]
+rootDevPath = {{ $rootDevPath | quote }}

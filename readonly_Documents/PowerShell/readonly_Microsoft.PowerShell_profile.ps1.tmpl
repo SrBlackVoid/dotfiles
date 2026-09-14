@@ -1,6 +1,3 @@
-{{- $host := .chezmoi.hostname -}}
-{{- $rootDevPath := index .general.rootDevPath $host -}}
-
 {{- $hasZoxide := lookPath "zoxide" -}}
 {{- $hasOhMyPosh := lookPath "oh-my-posh" -}}
 {{- $hasExercism := lookPath "exercism" -}}
@@ -46,7 +43,7 @@ Import-Module PSReadLine
 
 #region EnvVarSetups
 $env:nvimConfig = "~/AppData/Local/nvim"
-$env:CodeRepo = {{ $rootDevPath | toJson }}
+$env:HomeDev = {{ .rootDevPath | toJson }}
 
 {{ if $hasExercism -}}
 $env:Exercism = "~/Exercism"
