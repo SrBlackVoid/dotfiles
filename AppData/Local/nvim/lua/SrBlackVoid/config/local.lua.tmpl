@@ -21,4 +21,10 @@ return {
 	{{- end }}
 	},
 {{- end }}
+
+	-- Model for CopilotChat
+	-- (Edit with chezmoi edit-config, run chezmoi init if not present there)
+{{- if .neovim.copilotChatModel }}
+	copilotChat_model = {{ .neovim.copilotChatModel | toJson }},
+{{- end }}
 }

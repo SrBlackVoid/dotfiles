@@ -1,4 +1,8 @@
 {{- $rootDevPath := promptStringOnce . "rootDevPath" "Root development folder" -}}
+{{- $copilotChatModel := promptStringOnce . "neovim.copilotChatModel" "Preferred model for CopilotChat in Neovim (Requires raw value needed for config. Leave blank for default)" -}}
 
 [data]
 rootDevPath = {{ $rootDevPath | quote }}
+
+[data.neovim]
+copilotChatModel = {{ $copilotChatModel | quote }}

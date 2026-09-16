@@ -4,9 +4,12 @@
 
 Centralizing my configurations for different tools and configurations for all of my active machines.
 
+The main goal is to require as little manual editing as possible when deploying on a new machine overall,
+but still allowing for flexibility in terms of per-machine specifics.
+
 ## Environment
 
-Using chezmoi for centralized management of different configuration setups.
+Using [Chezmoi](https://www.chezmoi.io) for centralized management of different configuration setups.
 
 ## Current Contents
 
@@ -16,9 +19,11 @@ Using chezmoi for centralized management of different configuration setups.
 
 ## Maintenance and Configuration Needs
 
-I have configured this setup to require as little manual editing as possible when
-bringing in a new machine. This is done by setting up key template and data files to
-actively check for the presence of dependent apps/tools/modules and adjust components accordingly.
+### App/Module Dependencies
+
+For components that are reliant on an app/tool/module being installed, this setup
+uses key template and data files to actively check for the presence of those dependencies
+and adjusts the generated configs accordingly.
 
 For a simple example, the following line in my PowerShell profile:
 
@@ -27,11 +32,6 @@ Set-Alias grep Invoke-PsFzfRipgrep
 ```
 
 Will only be populated in $PROFILE if the current machine has the PSFzf module installed.
+If the module's not available, that line isn't added (no point in bringing that in).
 
-
-With that, the only required config element is:
-
-### Root Dev Path
-
-List the machine name and the root path for your development work.
-- Specified in .chezmoidata.yaml
+*NOTE*: Future versions of this will probably prompt for installation/setup of those dependencies.

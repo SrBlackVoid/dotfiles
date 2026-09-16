@@ -1,3 +1,5 @@
+local model_value = require("SrBlackVoid.config.local").copilotChat_model
+
 return {{
 	"CopilotC-Nvim/CopilotChat.nvim",
 	dependencies = {
@@ -13,6 +15,6 @@ return {{
 	},
 	opts = {
 		debug = false,
-		model = 'claude-sonnet-4.6',
+		model = model_value,
 	}
 }}
