@@ -90,3 +90,10 @@ Set-Alias grep Invoke-PsFzfRipgrep
 Set-Alias BuildMe Invoke-Build
 {{- end }}
 #endregion Aliases
+
+#region LocalProfile
+$localProfilePath = "$PSScriptRoot\PowerShell_profile.local.ps1"
+if (Test-Path $localProfilePath) {
+	. $localProfilePath
+}
+#endregion LocalProfile
