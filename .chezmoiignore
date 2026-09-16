@@ -7,3 +7,6 @@ README.md
 {{- if not (stat $obsidianJsonPath) }}
 AppData/Local/nvim/lua/SrBlackVoid/plugins/obsidian.lua
 {{- end }}
+{{- if not (lookPath "psmux") }}
+.psmux.conf
+{{- end }}
