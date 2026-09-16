@@ -3,6 +3,9 @@
 **/.git
 **/.git/**
 README.md
+{{- if not (lookPath "oh-my-posh") }}
+PoshLineConfig.json
+{{- end }}
 {{- $obsidianJsonPath := printf "%s/Obsidian/obsidian.json" (env "APPDATA") }}
 {{- if not (stat $obsidianJsonPath) }}
 AppData/Local/nvim/lua/SrBlackVoid/plugins/obsidian.lua

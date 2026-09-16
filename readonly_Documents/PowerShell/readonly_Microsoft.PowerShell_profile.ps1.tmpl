@@ -31,7 +31,7 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Act
 #endregion AsyncModuleLoads
 
 {{ if $hasOhMyPosh -}}
-& ([scriptBlock]::Create((oh-my-posh --init --shell pwsh --config ~/PoshConfigLine.json )))
+& ([scriptBlock]::Create((oh-my-posh --init --shell pwsh --config ~/PoshLineConfig.json )))
 {{- end }}
 
 # Initialize PSReadLine and zoxide (if installed)
