@@ -3,13 +3,20 @@
 **/.git
 **/.git/**
 README.md
+
 {{- if not (lookPath "oh-my-posh") }}
 PoshLineConfig.json
 {{- end }}
+
 {{- $obsidianJsonPath := printf "%s/Obsidian/obsidian.json" (env "APPDATA") }}
 {{- if not (stat $obsidianJsonPath) }}
 AppData/Local/nvim/lua/SrBlackVoid/plugins/obsidian.lua
 {{- end }}
+
 {{- if not (lookPath "psmux") }}
 .psmux.conf
+{{- end }}
+
+{{- if not (lookPath "wt") }}
+.chezmoiscripts/run_onchange_after_update-windows-terminal.ps1.tmpl
 {{- end }}

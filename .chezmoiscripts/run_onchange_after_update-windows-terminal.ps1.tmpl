@@ -1,0 +1,23 @@
+$keybindingsJson = @'
+{{ template "Windows Terminal/keybindings.json" . }}
+'@
+
+$keybindings = $keybindingsJson |
+    ConvertFrom-Json -Depth 10
+
+$terminalPackage = Get-AppxPackage -name Microsoft.WindowsTerminal
+$settingsPath = "$env:LocalAppData\Packages\$($terminalPackage.PackageFamilyName)\LocalState\settings.json"
+if (-NOT (Test-Path $settingsPath)) {
+	exit 0
+}
+$settings = Get-Content $settingsPath -Raw |
+    ConvertFrom-Json -AsHashtable -Depth 10
+$settings['keybindings'] = $keybindings
+
+$updatedSettings = ($settings | ConvertTo-Json -Depth 10) -replace "`r`n","`n"
+
+[System.IO.File]::WriteAllText(
+	$settingsPath,
+	$updatedSettings,
+	[System.Text.UTF8Encoding]::new($false)
+)

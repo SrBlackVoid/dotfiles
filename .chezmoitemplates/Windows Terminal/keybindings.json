@@ -1,0 +1,54 @@
+[
+	{
+		"id": "Terminal.DuplicatePaneAuto",
+		"keys": "alt+shift+d"
+	},
+	{
+		"id": "Terminal.SplitPaneDown",
+		"keys": "ctrl+alt+j"
+	},
+	{
+		"id": "Terminal.PasteFromClipboard",
+		"keys": "ctrl+v"
+	},
+	{
+		"id": "Terminal.FindText",
+		"keys": "ctrl+shift+f"
+	},
+	{
+		"id": "Terminal.SplitPaneUp",
+		"keys": "ctrl+alt+k"
+	},
+	{
+		"id": "Terminal.SplitPaneRight",
+		"keys": "ctrl+alt+l"
+	},
+	{
+		"id": "Terminal.CopyToClipboard",
+		"keys": "ctrl+c"
+	},
+	{
+		"id": "Terminal.ToggleMarkMode",
+		"keys": "ctrl+shift+m"
+	},
+	{
+		"id": "Terminal.MoveFocusRight",
+		"keys": "alt+l"
+	},
+	{
+		"id": "Terminal.MoveFocusUp",
+		"keys": "alt+k"
+	},
+	{
+		"id": "Terminal.SplitPaneLeft",
+		"keys": "ctrl+alt+h"
+	},
+	{
+		"id": "Terminal.MoveFocusLeft",
+		"keys": "alt+h"
+	},
+	{
+		"id": "Terminal.MoveFocusDown",
+		"keys": "alt+j"
+	}
+]

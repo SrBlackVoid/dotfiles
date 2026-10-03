@@ -13,9 +13,10 @@ Using [Chezmoi](https://www.chezmoi.io) for centralized management of different 
 
 ## Current Contents
 
-- Neovim
+- Neovim (currently supporting v. 0.11.6)
 - PowerShell 7 Profile
 - PSMux
+- Windows Terminal (Keybindings only)
 
 ## Maintenance and Configuration Needs
 
